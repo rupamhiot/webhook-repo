@@ -38,6 +38,7 @@ def receiver():
             to_branch = ref.split('/')[-1]  # Extracting branch name from ref
             pushed_by = payload.get('pusher', {}).get('name')
             timestamp = convert_utc_time(payload.get('head_commit', {}).get('timestamp'))
+            print(timestamp);
             collection.insert_one({
                 'request_id':None,
                 'author':pushed_by,
