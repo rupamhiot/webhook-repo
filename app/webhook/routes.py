@@ -23,15 +23,15 @@ def receiver():
             to_branch = ref.split('/')[-1]  # Extracting branch name from ref
             pushed_by = payload.get('pusher', {}).get('name')
             timestamp = payload.get('head_commit', {}).get('timestamp')
-            timestamp_utc  = datetime(timestamp, tzinfo=pytz.utc)
-            formatted_datetime = timestamp_utc.strftime("%Y-%m-%d %I:%M %p UTC")
+            # timestamp_utc  = datetime(timestamp, tzinfo=pytz.utc)
+            # formatted_datetime = timestamp_utc.strftime("%Y-%m-%d %I:%M %p UTC")
             collection.insert_one({
                 'request_id':None,
                 'author':pushed_by,
                 'action':'push',
                 'from_branch':None,
                 'to_branch':to_branch,
-                'timestamp':formatted_datetime
+                'timestamp':timestamp
             })
             
         elif action == 'opened':
@@ -39,14 +39,14 @@ def receiver():
             base_branch = payload.get('pull_request', {}).get('base', {}).get('ref')
             head_branch = payload.get('pull_request', {}).get('head', {}).get('ref')
             timestamp = payload.get('pull_request', {}).get('created_at')
-            timestamp_utc = datetime.fromisoformat(timestamp).astimezone(pytz.utc).isoformat()
+            # timestamp_utc = datetime.fromisoformat(timestamp).astimezone(pytz.utc).isoformat()
         
             collection.insert_one({
                 'request_id':pull_request_id,
                 'author':author,
                 'action':action,
                 'from_branch':head_branch,
-                'timestamp':timestamp_utc
+                'timestamp':timestamp
             })
     
         elif action == 'closed' and payload.get('pull_request', {}).get('merged'):
