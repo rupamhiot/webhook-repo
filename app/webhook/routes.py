@@ -2,24 +2,9 @@ from flask import Blueprint, jsonify, render_template, request
 from datetime import datetime
 import pytz
 
-
-
-
 from ..extensions import collection
 from flask import render_template
 webhook = Blueprint('Webhook', __name__, url_prefix='/webhook')
-
-def convert_utc_time(datetime_str):
-    datetime_str = datetime_str,
-    local_dt = datetime.fromisoformat(datetime_str)
-    local_tz = pytz.timezone('Asia/Kolkata')
-    localized_dt = local_tz.localize(local_dt)
-    utc_dt = localized_dt.astimezone(pytz.utc)
-    return utc_dt
-
-
-
-
 # Receiver end point
 
 @webhook.route('/')
@@ -38,24 +23,21 @@ def receiver():
             to_branch = ref.split('/')[-1]  # Extracting branch name from ref
             pushed_by = payload.get('pusher', {}).get('name')
             timestamp = payload.get('head_commit', {}).get('timestamp')
-            print(timestamp)
-
-            timestamp1 = convert_utc_time(payload.get('head_commit', {}).get('timestamp'))
-            print(timestamp1)
+            timestamp_utc = datetime.fromisoformat(timestamp).astimezone(pytz.utc).isoformat()
             collection.insert_one({
                 'request_id':None,
                 'author':pushed_by,
                 'action':'push',
                 'from_branch':None,
                 'to_branch':to_branch,
-                'timestamp':timestamp
+                'timestamp':timestamp_utc
             })
             
         elif action == 'opened':
             pull_request_id = payload.get('pull_request', {}).get('id')
             base_branch = payload.get('pull_request', {}).get('base', {}).get('ref')
             head_branch = payload.get('pull_request', {}).get('head', {}).get('ref')
-            timestamp = convert_utc_time(payload.get('pull_request', {}).get('created_at'))
+            timestamp = payload.get('pull_request', {}).get('created_at')
         
             collection.insert_one({
                 'request_id':pull_request_id,
@@ -85,8 +67,6 @@ def receiver():
 def api_route():
     pull_requests_data = collection.find()
     return render_template('index.html', pull_requests=pull_requests_data)
-
-
 @webhook.route('/api/data')
 def get_data():
     pull_requests = collection.find()
