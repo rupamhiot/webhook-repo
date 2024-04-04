@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, render_template, request
 from datetime import datetime
-import pytz
+
 
 from ..extensions import collection
 from flask import render_template
@@ -23,8 +23,9 @@ def receiver():
             to_branch = ref.split('/')[-1]  # Extracting branch name from ref
             pushed_by = payload.get('pusher', {}).get('name')
             timestamp = payload.get('head_commit', {}).get('timestamp')
-            # timestamp_utc  = datetime(timestamp, tzinfo=pytz.utc)
-            # formatted_datetime = timestamp_utc.strftime("%Y-%m-%d %I:%M %p UTC")
+            datetime_str = timestamp
+            datetime_obj = datetime.strptime(datetime_str, "%Y-%m-%dT%H:%M:%S%z")
+           
             collection.insert_one({
                 'request_id':None,
                 'author':pushed_by,
@@ -39,6 +40,12 @@ def receiver():
             base_branch = payload.get('pull_request', {}).get('base', {}).get('ref')
             head_branch = payload.get('pull_request', {}).get('head', {}).get('ref')
             timestamp = payload.get('pull_request', {}).get('created_at')
+            datetime_str = timestamp
+            datetime_obj = datetime.strptime(datetime_str, "%Y-%m-%dT%H:%M:%S%z")
+          
+
+
+
             # timestamp_utc = datetime.fromisoformat(timestamp).astimezone(pytz.utc).isoformat()
         
             collection.insert_one({
@@ -46,7 +53,8 @@ def receiver():
                 'author':author,
                 'action':action,
                 'from_branch':head_branch,
-                'timestamp':timestamp
+                'to_branch' : base_branch,
+                'timestamp':datetime_obj
             })
     
         elif action == 'closed' and payload.get('pull_request', {}).get('merged'):
@@ -54,13 +62,15 @@ def receiver():
             base_branch = payload.get('pull_request', {}).get('base', {}).get('ref')
             head_branch = payload.get('pull_request', {}).get('head', {}).get('ref')
             timestamp = payload.get('pull_request', {}).get('updated_at')
+            datetime_str = timestamp
+            datetime_obj = datetime.strptime(datetime_str, "%Y-%m-%dT%H:%M:%S%z")
             collection.insert_one({
                 'request_id':merged_pr_id,
                 'author':author,
                 'action':action,
                 'from_branch':head_branch,  
                 'to_branch':base_branch,
-                'timestamp':timestamp
+                'timestamp':datetime_obj
             })
     return {}, 200
 
@@ -69,6 +79,7 @@ def receiver():
 def api_route():
     pull_requests_data = collection.find()
     return render_template('index.html', pull_requests=pull_requests_data)
+
 @webhook.route('/api/data')
 def get_data():
     pull_requests = collection.find()
