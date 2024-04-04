@@ -3,9 +3,21 @@ from datetime import datetime
 import pytz
 
 
+
+
 from ..extensions import collection
 from flask import render_template
 webhook = Blueprint('Webhook', __name__, url_prefix='/webhook')
+
+def convert_utc_time(datetime_str):
+    datetime_str = datetime_str,
+    local_dt = datetime.fromisoformat(datetime_str)
+    local_tz = pytz.timezone('Asia/Kolkata')
+    localized_dt = local_tz.localize(local_dt)
+    utc_dt = localized_dt.astimezone(pytz.utc)
+    return utc_dt
+
+
 
 
 # Receiver end point
@@ -25,7 +37,7 @@ def receiver():
             ref = payload.get('ref')
             to_branch = ref.split('/')[-1]  # Extracting branch name from ref
             pushed_by = payload.get('pusher', {}).get('name')
-            timestamp = payload.get('head_commit', {}).get('timestamp')
+            timestamp = convert_utc_time(payload.get('head_commit', {}).get('timestamp'))
             collection.insert_one({
                 'request_id':None,
                 'author':pushed_by,
@@ -39,7 +51,7 @@ def receiver():
             pull_request_id = payload.get('pull_request', {}).get('id')
             base_branch = payload.get('pull_request', {}).get('base', {}).get('ref')
             head_branch = payload.get('pull_request', {}).get('head', {}).get('ref')
-            timestamp = payload.get('pull_request', {}).get('created_at')
+            timestamp = convert_utc_time(payload.get('pull_request', {}).get('created_at'))
         
             collection.insert_one({
                 'request_id':pull_request_id,
