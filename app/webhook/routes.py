@@ -38,13 +38,14 @@ def receiver():
             base_branch = payload.get('pull_request', {}).get('base', {}).get('ref')
             head_branch = payload.get('pull_request', {}).get('head', {}).get('ref')
             timestamp = payload.get('pull_request', {}).get('created_at')
+            timestamp_utc = datetime.fromisoformat(timestamp).astimezone(pytz.utc).isoformat()
         
             collection.insert_one({
                 'request_id':pull_request_id,
                 'author':author,
                 'action':action,
                 'from_branch':head_branch,
-                'timestamp':timestamp
+                'timestamp':timestamp_utc
             })
     
         elif action == 'closed' and payload.get('pull_request', {}).get('merged'):
