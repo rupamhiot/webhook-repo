@@ -21,17 +21,17 @@
                 .then(response => response.json())
                 .then(data => {
                     const ul = document.getElementById('event_display'); // Retrieve the ul element
-                    ul.innerHTML = ''; // Clear previous content
-                    data.forEach(pr => {
+                    ul.innerHTML = ''; 
+                    data.forEach(pull_requests_data => {
                         const li = document.createElement('li');
                         li.classList.add('list-group-item'); // Add Bootstrap list-group-item class
                         let text = '';
-                        if (pr.action === "opened") {
-                            text = `"${pr.author}" submitted a pull request from "${pr.from_branch}" to "${pr.to_branch}" on "${pr.timestamp}"`;
-                        } else if (pr.action === "closed") {
-                            text = `"${pr.author}" merged branch "${pr.from_branch}" to "${pr.to_branch}" on "${pr.timestamp}"`;
-                        } else if (pr.action === "push") {
-                            text = `"${pr.author}" pushed to "${pr.to_branch}" on "${pr.timestamp}"`;
+                        if (pull_requests_data.action === "opened") {
+                            text = `"${pull_requests_data.author}" submitted a pull request from "${pull_requests_data.from_branch}" to "${pull_requests_data.to_branch}" on "${pull_requests_data.timestamp}"`;
+                        } else if (pull_requests_data.action === "closed") {
+                            text = `"${pull_requests_data.author}" merged branch "${pull_requests_data.from_branch}" to "${pull_requests_data.to_branch}" on "${pull_requests_data.timestamp}"`;
+                        } else if (pull_requests_data.action === "push") {
+                            text = `"${pull_requests_data.author}" pushed to "${pull_requests_data.to_branch}" on "${pull_requests_data.timestamp}"`;
                         }
                         li.textContent = text;
                         ul.appendChild(li);
@@ -39,10 +39,8 @@
                 })
                 .catch(error => console.error('Error fetching data:', error));
         }
-
         // Call the function initially
         fetchDataAndUpdate();
-
         // Call the function every 15 seconds
         setInterval(fetchDataAndUpdate, 15000);
     </script>
