@@ -43,7 +43,7 @@ POST http://127.0.0.1:5000/webhook/receiver
 
 
 ```bash
-GET http://127.0.0.1:5000/webhook/ui/dashboard
+GET http://127.0.0.1:5000/webhook/ui
 ```
 
 
