@@ -1,49 +1,30 @@
 
 *******************
-
+## Introduction
+Now webhook application is composed of three service layers. Web layer, Backend layer, and database layer. Nginx served as the web layer, python flask served as the backend, and mondgodb as db layer. 
+All are comsed as one service with docker compose yml file. Now docker-compose up -d will run three docker containers.
 ## Setup
 
-* Create a new virtual environment
-
+* run docker compose  to start the application
 ```bash
-pip install virtualenv
+docker compose up -d
 ```
-
-* Create the virtual env
-
-```bash
-virtualenv venv
+* To stop the the application
 ```
-
-* Activate the virtual env
-
-```bash
-source venv/bin/activate
-```
-
-* Install requirements
-
-```bash
-pip install -r requirements.txt
-```
-
-* Run the flask application (In production, please use Gunicorn)
-
-```bash
-python run.py
+docker compose down
 ```
 
 * The endpoint is at:
 
 ```bash
-POST http://127.0.0.1:5000/webhook/receiver
+POST http://127.0.0.1:8081/webhook/receiver
 ```
 
 * The UI endpoint is:
 
 
 ```bash
-GET http://127.0.0.1:5000/webhook/ui/dashboard
+GET http://127.0.0.1:8081/webhook/ui
 ```
 
 
