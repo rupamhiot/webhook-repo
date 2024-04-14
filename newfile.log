@@ -1,8 +1,0 @@
-2024-04-13 01:52:53,927  * Debugger is active!
-2024-04-13 01:52:53,931  * Debugger PIN: 131-660-857
-2024-04-13 01:52:55,677 127.0.0.1 - - [13/Apr/2024 01:52:55] "GET /webhook/api/data HTTP/1.1" 200 -
-2024-04-13 01:52:55,848 127.0.0.1 - - [13/Apr/2024 01:52:55] "GET /webhook/api/data HTTP/1.1" 200 -
-2024-04-13 01:53:02,716 Received a webhook request
-2024-04-13 01:53:02,872 127.0.0.1 - - [13/Apr/2024 01:53:02] "POST /webhook/receiver HTTP/1.1" 200 -
-2024-04-13 01:53:03,059 Received a webhook request
-2024-04-13 01:53:03,277 127.0.0.1 - - [13/Apr/2024 01:53:03] "POST /webhook/receiver HTTP/1.1" 200 -
