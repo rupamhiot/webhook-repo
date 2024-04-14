@@ -24,7 +24,7 @@ POST http://127.0.0.1:8081/webhook/receiver
 
 
 ```bash
-GET http://127.0.0.1:8081/webhook/ui
+http://127.0.0.1:8081/webhook/ui
 ```
 
 
