@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pull Requests</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Latest Github Events (PUSH, PULL, MERGE only)</h1>
+        <p>This page is getting refreshed every 15 sec automatically</p>
+        <ul id="event_display">
+            {% for pr_data in pull_requests_data %}
+                <li class="{% if pr_data.action == 'opened' %}opened{% elif pr_data.action == 'closed' %}closed{% elif pr_data.action == 'push' %}pushed{% endif %}">
+                    {% if pr_data.action == 'opened' %}
+                        "{{ pr_data.author }}" submitted a pull request from "{{ pr_data.from_branch }}" to "{{ pr_data.to_branch }}" on "{{ pr_data.timestamp }}"
+                    {% elif pr_data.action == 'closed' %}
+                        "{{ pr_data.author }}" merged branch "{{ pr_data.from_branch }}" to "{{ pr_data.to_branch }}" on "{{ pr_data.timestamp }}"
+                    {% elif pr_data.action == 'push' %}
+                        "{{ pr_data.author }}" pushed to "{{ pr_data.to_branch }}" on "{{ pr_data.timestamp }}"
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <script>
+        function refreshPage() {
+            setTimeout(function() {
+                window.location.reload(true);
+            }, 15000); // 15 seconds
+        }
+        refreshPage();
+    </script>   
+</body>
+</html>
