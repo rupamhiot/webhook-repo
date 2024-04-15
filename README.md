@@ -1,11 +1,11 @@
 
 *******************
 ## Introduction
-Now webhook application is composed of three service layers. Web layer, Backend layer, and database layer. Nginx served as the web layer, python flask served as the backend, and mondgodb as db layer. 
-All are comsed as one service with docker compose yml file. Now docker-compose up -d will run three docker containers.
+Now webhook application is composed of three service layers. Web layer, Backend layer, and database layer. Nginx served as the web layer, Python Flask served as the backend, and Mongodb as the db layer. 
+All are composed as one service with a docker-compose yml file. Now docker compose up -d will run three docker containers.
 ## Setup
 
-* run docker compose  to start the application
+* run docker-compose  to start the application
 ```bash
 docker compose up -d
 ```
